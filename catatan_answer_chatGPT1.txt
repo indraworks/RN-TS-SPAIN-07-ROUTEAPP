@@ -1,0 +1,42 @@
+answer code :
+import React, { useEffect, useState } from 'react';
+import { View, Text, StyleSheet, Platform } from 'react-native';
+import { check, PERMISSIONS, PermissionStatus } from 'react-native-permissions';
+
+const PermissionScreen: React.FC = () => {
+  const [permissionStatus, setPermissionStatus] = useState<PermissionStatus>('denied');
+
+  useEffect(() => {
+    const checkPermission = async () => {
+      let status: PermissionStatus;
+
+      if (Platform.OS === 'ios') {
+        status = await check(PERMISSIONS.IOS.LOCATION_WHEN_IN_USE);
+      } else {
+        status = await check(PERMISSIONS.ANDROID.ACCESS_FINE_LOCATION);
+      }
+
+      setPermissionStatus(status);
+    };
+
+    checkPermission();
+  }, []);
+
+  return (
+    <View style={styles.container}>
+      <Text>Permission</Text>
+      <Text>Status: {permissionStatus}</Text>
+    </View>
+  );
+};
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+});
+
+export default PermissionScreen;
+

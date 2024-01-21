@@ -1,0 +1,82 @@
+I have code react-native using typescript as below :
+
+import 'react-native-gesture-handler';
+import { createNativeStackNavigator} from '@react-navigation/native-stack';
+import Permission from '../screens/PermissionScreen';
+import MapScreen from '../screens/MapScreen';
+
+
+import PermissionScreen from '../screens/PermissionScreen';
+
+type StackParamList = {
+ 
+}
+
+const Stack = createNativeStackNavigator<StackParamList>();
+
+
+
+const NavigationApp = () => {
+  return (
+    <Stack.Navigator
+      initialRouteName="PermissionScreen"
+      
+      screenOptions={{
+        headerShown: false,
+        
+      }}>
+      <Stack.Screen name="PermissionScreen" component={PermissionScreen} />
+      <Stack.Screen name="MapScreen" component={MapScreen} />
+    </Stack.Navigator>
+  );
+};
+
+export default NavigationApp;
+
+and my code for function PermissionsScreen as bellow and its having error :
+
+
+import { View, Text,StyleSheet,  Platform } from 'react-native'
+import React from 'react'
+import { check,PERMISSIONS,PermissionStatus } from 'react-native-permissions'
+
+
+
+const PermissionScreen = async() => {
+  //check permitions 
+  let permissionStatus :PermissionStatus // ini builtin react-native 
+  if(Platform.OS === 'ios') {
+    permissionStatus = await check(PERMISSIONS.IOS.LOCATION_WHEN_IN_USE)
+  } else {
+    permissionStatus = await check(PERMISSIONS.ANDROID.ACCESS_FINE_LOCATION)
+  }
+
+  return (
+    <View style={styles.container}>
+      <Text>Permission</Text>
+    </View>
+  )
+}
+
+const styles = StyleSheet.create({
+  container:{
+    flex:1,
+    justifyContent:'center',
+    alignItems:'center'
+  }
+})
+
+export default PermissionScreen
+
+
+i have error as below:
+showing error in the App.tsx as below:
+
+
+Type '() => Promise<React.JSX.Element>' is not assignable to type 'ScreenComponentType<StackParamList, "PermissionScreen"> | undefined'.
+  Type '() => Promise<React.JSX.Element>' is not assignable to type 'FunctionComponent<{}>'.
+    Type 'Promise<Element>' is not assignable to type 'ReactNode'.ts
+    
+ would you please help me solve problem? 
+    
+    

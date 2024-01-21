@@ -1,0 +1,184 @@
+Certainly! In React, context provides a way to pass data through the component tree without having to pass props manually at every level. This is particularly useful for global state management. When using TypeScript, you can also provide types for your context to ensure type safety.
+
+jadi intinya yg namanya provider itu kita sediakan state ,atau header functionya 
+terus kita sediakan ini agar nnti di component2 ini kita langsung direct access ke component tsb
+tanpa ada hirarki drill2 
+   paretn
+     I
+  component1 (props)
+     |
+  componment-anak2 (props)
+     |
+  component - anak3 (props)
+  diatas itu cara normal props dipasing    
+  
+  
+  kalau dgn context maka 
+    parent
+      | 
+   compoennt-anak3 langsung di panggil :        
+
+
+Here's an example of how you can create a simple context in React using TypeScript:
+
+1)Create Context Data Type: Define an interface (MyContextData) to represent the shape of your context data.
+
+2)Create Context: Use createContext to create a context with an initial value. 
+In this case, the initial value is undefined.
+
+3)Create Provider Component: Create a provider component (MyContextProvider) that sets up the state and provides the context value to its children.
+
+4)Create Custom Hook: Create a custom hook (useMyContext) to consume the context. 
+This hook ensures that the component using it is wrapped inside a MyContextProvider.
+
+ini di childrennya src/components/MyComponents.tsx
+5)Use Context in Components: Use the context in your components by calling the custom hook (useMyContext). 
+The example component (ExampleComponent) demonstrates how to use the context to display and update the username.
+
+ini di src/App.tsx nya 
+Wrap App with Provider: Finally, wrap your application (or part of it) with the context provider (MyContextProvider). 
+This makes the context available to the components within its subtree. ( dismua tingkatan tree ).
+
+This example showcases a basic usage pattern of React context with TypeScript.
+ You can extend and modify it based on your specific use case and requirements.
+ 
+ 
+ contoh :
+ 
+ import React, { createContext, useContext, ReactNode } from 'react';
+
+// Define the type for your context data
+// type data di context bisa berupa variable dan function  pakai abstract atau interface !
+interface MyContextData {
+  username: string;
+  setUser: (name: string) => void;
+}
+
+// Create a context with an initial value
+//create Context dgn typedatanya yg diatas kita sudah declare lewat interface diatas!
+
+const MyContext = createContext<MyContextData | undefined>(undefined);
+
+// Create a provider component
+//buat provider atau tag pembungkus utk component2 dibawahnya nnti!
+interface MyContextProviderProps {
+  children: ReactNode;
+}
+
+const MyContextProvider: React.FC<MyContextProviderProps> = ({ children }) => {
+  const [username, setUsername] = React.useState<string>('');
+
+  // Define the setUser function to update the context state
+  //tadi diatas sudah kita buat element setUser di interface MyContextData ini lengkapnya dibuat disini 
+  
+  const setUser = (name: string) => {
+    setUsername(name);
+  };
+
+  // Provide the context value to the children
+  
+  const contextValue: MyContextData = {
+    username,
+    setUser,
+  };
+
+  return <MyContext.Provider value={contextValue}>{children}</MyContext.Provider>;
+};
+
+// Create a custom hook to consume the context
+const useMyContext = (): MyContextData => {
+  const context = useContext(MyContext);
+  if (!context) {
+    throw new Error('useMyContext must be used within a MyContextProvider');
+  }
+  return context;
+};
+
+// Example of using the context in a component
+const ExampleComponent: React.FC = () => {
+  const { username, setUser } = useMyContext();
+
+  return (
+    <div>
+      <p>Username: {username}</p>
+      <button onClick={() => setUser('John')}>Set User</button>
+    </div>
+  );
+};
+
+// Wrap your application with the context provider
+const App: React.FC = () => {
+  return (
+    <MyContextProvider>
+      <ExampleComponent />
+    </MyContextProvider>
+  );
+};
+
+export default App;
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
